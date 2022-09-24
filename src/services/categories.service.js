@@ -10,6 +10,9 @@ const registerCategory = async (name) => {
   return { type: null, message: newCategory };
 };
 
+const getAllCategories = async () => Category.findAll();
+
 module.exports = {
   registerCategory,
+  getAllCategories,
 };
