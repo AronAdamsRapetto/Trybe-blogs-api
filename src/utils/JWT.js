@@ -16,6 +16,16 @@ const generateToken = ({ id, displayName, image }) => {
   return jwt.sign(payload, secret, config);
 };
 
+const verifyToken = (token) => {
+  try {
+    const payload = jwt.verify(token, secret);
+    return { type: null, message: payload };    
+  } catch (error) {
+    return { type: 401, message: 'Expired or invalid token' };
+  }
+};
+
 module.exports = {
   generateToken,
+  verifyToken,
 };
