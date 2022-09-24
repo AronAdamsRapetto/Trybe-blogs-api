@@ -9,6 +9,15 @@ const registerUser = async (req, res) => {
   return res.status(201).json({ token: message });
 };
 
+const getAllUsers = async (_req, res) => {
+  const users = await userService.getAllUsers();
+  return res.status(200).json(users);
+};
+
+// const getUserById = async (req, res) => {};
+
 module.exports = {
   registerUser,
+  getAllUsers,
+  // getUserById,
 };
