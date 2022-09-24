@@ -1,4 +1,4 @@
-const { BlogPost, Category, PostCategory, sequelize } = require('../models');
+const { BlogPost, Category, PostCategory, User, sequelize } = require('../models');
 
 const verifyCategories = async (categoryIds) => {
   const results = await Promise.all(categoryIds.map(async (id) => Category.findByPk(id)));
@@ -30,6 +30,22 @@ const registerPost = async ({ title, content, categoryIds }, userId) => {
   return { type: null, message: result };
 };
 
+const getAllPosts = async () => BlogPost.findAll({
+  include: [
+    {
+      model: User,
+      as: 'user',
+      attributes: ['id', 'displayName', 'email', 'image'],
+    },
+    {
+      model: Category,
+      as: 'categories',
+      through: { attributes: [] },
+    },
+  ],
+});
+
 module.exports = {
   registerPost,
+  getAllPosts,
 };

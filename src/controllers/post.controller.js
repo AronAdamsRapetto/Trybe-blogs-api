@@ -9,6 +9,12 @@ const registerPost = async (req, res) => {
   return res.status(201).json(message);
 };
 
+const getAllPosts = async (req, res) => {
+  const posts = await postService.getAllPosts();
+  res.status(200).json(posts);
+};
+
 module.exports = {
   registerPost,
+  getAllPosts,
 };
