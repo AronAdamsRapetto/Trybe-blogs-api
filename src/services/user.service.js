@@ -15,11 +15,21 @@ const registerUser = async (userInfo) => {
 
   if (isAlreadyUserExist) return { type: 409, message: 'User already registered' };  
   const { dataValues: newUser } = await User.create(userInfo);
-  
+
   const token = generateToken(newUser);
   return { type: null, message: token };
 };
 
+const getAllUsers = async () => User.findAll({
+  attributes: {
+    exclude: ['password'],
+  },
+});
+
+// const getUserById = async () => {};
+
 module.exports = {
   registerUser,
+  getAllUsers,
+  // getUserById,
 };
