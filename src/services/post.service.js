@@ -82,9 +82,20 @@ const updatePost = async ({ title, content }, id, { id: userId }) => {
   return { type: 500, message: 'Algo deu errado, tente novamente mais tarde!' };
 };
 
+const removePost = async (id, { id: userId }) => {
+  const validation = await validateUser(userId, id);
+
+  if (validation.type) return validation;
+
+  const isRemoved = await BlogPost.destroy({ where: { id } });
+  if (isRemoved) return { type: null, message: '' };
+  return { type: 500, message: 'Algo deu errado' };
+};
+
 module.exports = {
   registerPost,
   getAllPosts,
   getPostById,
   updatePost,
+  removePost,
 };
