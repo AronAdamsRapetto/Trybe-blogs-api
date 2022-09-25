@@ -40,8 +40,16 @@ const getUserById = async (id) => {
   return { type: null, message: user };
 };
 
+const removeUser = async ({ id }) => {
+  const isRemoved = await User.destroy({ where: { id } });
+
+  if (isRemoved) return { type: null, message: '' };
+  return { type: 500, message: 'Algo deu errado!' };
+};
+
 module.exports = {
   registerUser,
   getAllUsers,
   getUserById,
+  removeUser,
 };
