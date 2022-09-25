@@ -41,10 +41,20 @@ const removePost = async (req, res) => {
   return res.status(204).json();
 };
 
+const searchPost = async (req, res) => {
+  const { q } = req.query;
+
+  const { type, message } = await postService.searchPost(q);
+
+  if (type) return res.status(type).json({ message });
+  return res.status(200).json(message);
+};
+
 module.exports = {
   registerPost,
   getAllPosts,
   getPostById,
   updatePost,
   removePost,
+  searchPost,
 };
