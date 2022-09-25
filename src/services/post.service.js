@@ -58,8 +58,33 @@ if (!post) return { type: 404, message: 'Post does not exist' };
 return { type: null, message: post };
 };
 
+const validateUser = async (userId, postId) => {
+  const { type, message } = await getPostById(postId); 
+
+  if (type) return { type, message };
+  if (message.user.id !== userId) return { type: 401, message: 'Unauthorized user' };
+  return { type: null, message: '' };
+};
+
+const updatePost = async ({ title, content }, id, { id: userId }) => {
+  if (!title || !content) return { type: 400, message: 'Some required fields are missing' };
+
+  const validation = await validateUser(userId, id);
+  if (validation.type) return validation;
+
+  const [isUpdated] = await BlogPost.update({ title, content }, {
+    where: { id },
+  });
+  if (isUpdated) {
+    const updatedPost = await getPostById(id);
+    return updatedPost;
+  }
+  return { type: 500, message: 'Algo deu errado, tente novamente mais tarde!' };
+};
+
 module.exports = {
   registerPost,
   getAllPosts,
   getPostById,
+  updatePost,
 };
