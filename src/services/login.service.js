@@ -1,24 +1,13 @@
 const { User } = require('../models');
 const { generateToken } = require('../utils/JWT');
+const errorThrower = require('../utils/errorThrower');
 
 const verifyLogin = (user) => {
-  if (!user) {
-    const error = {
-      statusCode: 400,
-      message: 'Invalid fields',
-    };
-    throw error;
-  }
+  if (!user) errorThrower(400, 'Invalid fields');
 };
 
 const login = async ({ email, password }) => {  
-  if (!email || !password) {
-    const error = {
-      statusCode: 400,
-      message: 'Some required fields are missing',
-    };
-    throw error;
-  }
+  if (!email || !password) errorThrower(400, 'Some required fields are missing');
 
   const user = await User.findOne({
     where: {

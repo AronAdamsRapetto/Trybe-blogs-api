@@ -1,5 +1,6 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const errorThrower = require('./errorThrower');
 
 const secret = process.env.JWT_SECRET;
 
@@ -21,11 +22,7 @@ const verifyToken = (token) => {
     const payload = jwt.verify(token, secret);
     return payload;  
   } catch (err) {
-    const error = {
-      statusCode: 401,
-      message: 'Expired or invalid token',
-    };
-    throw error;
+    errorThrower(401, 'Expired or invalid token');
   }
 };
 

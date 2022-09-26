@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const { validateUser } = require('./validations/validationUser');
 const { generateToken } = require('../utils/JWT');
+const errorThrower = require('../utils/errorThrower');
 
 const registerUser = async (userInfo) => {
   validateUser(userInfo);
@@ -11,13 +12,7 @@ const registerUser = async (userInfo) => {
     },
   });
 
-  if (isAlreadyUserExist) {
-    const error = {
-      statusCode: 409,
-      message: 'User already registered',
-    };
-    throw error;
-  }
+  if (isAlreadyUserExist) errorThrower(409, 'User already registered');
 
   const { dataValues: newUser } = await User.create(userInfo);
   return generateToken(newUser);
@@ -39,12 +34,7 @@ const getUserById = async (id) => {
     },
   });
 
-  if (!user) {
-    const error = {
-      statusCode: 404, message: 'User does not exist',
-    };
-    throw error;
-  }
+  if (!user) errorThrower(404, 'User does not exist');
   return user;
 };
 
