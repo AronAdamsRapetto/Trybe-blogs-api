@@ -15,37 +15,31 @@ const getAllPosts = async (_req, res) => {
 const getPostById = async (req, res) => {
   const { id } = req.params;
 
-  const { type, message } = await postService.getPostById(id);
-  if (type) return res.status(type).json({ message });
-  return res.status(200).json(message);
+  const post = await postService.getPostById(id);
+  return res.status(200).json(post);
 };
 
 const updatePost = async (req, res) => {
   const { user, body } = req;
   const { id } = req.params;
 
-  const { type, message } = await postService.updatePost(body, id, user);
-  if (type) return res.status(type).json({ message });
-  return res.status(200).json(message);
+  const updatedPost = await postService.updatePost(body, id, user);
+  return res.status(200).json(updatedPost);
 };
 
 const removePost = async (req, res) => {
   const { user } = req;
   const { id } = req.params;
 
-  const { type, message } = await postService.removePost(id, user);
-  
-  if (type) return res.status(type).json({ message });
+  await postService.removePost(id, user);
   return res.status(204).json();
 };
 
 const searchPost = async (req, res) => {
   const { q } = req.query;
 
-  const { type, message } = await postService.searchPost(q);
-
-  if (type) return res.status(type).json({ message });
-  return res.status(200).json(message);
+  const posts = await postService.searchPost(q);
+  return res.status(200).json(posts);
 };
 
 module.exports = {

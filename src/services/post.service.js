@@ -57,48 +57,37 @@ const getPostById = async (id) => {
   ],  
 });
 
-if (!post) return { type: 404, message: 'Post does not exist' };
-return { type: null, message: post };
+if (!post) errorThrower(404, 'Post does not exist');
+return post;
 };
 
 const validateUser = async (userId, postId) => {
-  const { type, message } = await getPostById(postId); 
+  const post = await getPostById(postId); 
 
-  if (type) return { type, message };
-  if (message.user.id !== userId) return { type: 401, message: 'Unauthorized user' };
-  return { type: null, message: '' };
+  if (post.user.id !== userId) errorThrower(401, 'Unauthorized user');
 };
 
 const updatePost = async ({ title, content }, id, { id: userId }) => {
-  if (!title || !content) return { type: 400, message: 'Some required fields are missing' };
+  if (!title || !content) errorThrower(400, 'Some required fields are missing');
+  await validateUser(userId, id);
 
-  const validation = await validateUser(userId, id);
-  if (validation.type) return validation;
-
-  const [isUpdated] = await BlogPost.update({ title, content }, {
+  await BlogPost.update({ title, content }, {
     where: { id },
   });
-  if (isUpdated) {
-    const updatedPost = await getPostById(id);
-    return updatedPost;
-  }
-  return { type: 500, message: 'Algo deu errado, tente novamente mais tarde!' };
+
+  const updatedPost = await getPostById(id);
+  return updatedPost;
 };
 
 const removePost = async (id, { id: userId }) => {
-  const validation = await validateUser(userId, id);
-
-  if (validation.type) return validation;
-
-  const isRemoved = await BlogPost.destroy({ where: { id } });
-  if (isRemoved) return { type: null, message: '' };
-  return { type: 500, message: 'Algo deu errado' };
+  await validateUser(userId, id);
+  await BlogPost.destroy({ where: { id } });
 };
 
 const searchPost = async (query) => {
 if (!query) {
   const posts = await getAllPosts();
-  return { type: null, message: posts };
+  return posts;
 }
 
 const posts = await BlogPost.findAll({
@@ -114,7 +103,7 @@ const posts = await BlogPost.findAll({
   ],
 });
 
-return { type: null, message: posts };
+return posts;
 };
 
 module.exports = {
