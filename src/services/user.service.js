@@ -18,7 +18,7 @@ const registerUser = async (userInfo) => {
     };
     throw error;
   }
-  
+
   const { dataValues: newUser } = await User.create(userInfo);
   return generateToken(newUser);
 };
@@ -39,8 +39,13 @@ const getUserById = async (id) => {
     },
   });
 
-  if (!user) return { type: 404, message: 'User does not exist' };
-  return { type: null, message: user };
+  if (!user) {
+    const error = {
+      statusCode: 404, message: 'User does not exist',
+    };
+    throw error;
+  }
+  return user;
 };
 
 const removeUser = async ({ id }) => {
