@@ -2,12 +2,10 @@ const { Category } = require('../models');
 const validationName = require('./validations/validationNameCategory');
 
 const registerCategory = async (name) => {
-  const validate = validationName(name);
-
-  if (validate.type) return validate;
+  validationName(name);
 
   const newCategory = await Category.create({ name });
-  return { type: null, message: newCategory };
+  return newCategory;
 };
 
 const getAllCategories = async () => Category.findAll();

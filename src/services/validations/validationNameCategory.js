@@ -1,11 +1,15 @@
 const { nameSchema } = require('./schemas');
 
 const validationName = (name) => {
-  const { error } = nameSchema.validate(name);
-  console.log(error);
+  const { error: joiError } = nameSchema.validate(name);
 
-  if (error) return { type: 400, message: error.message };
-  return { type: null, message: '' };
+  if (joiError) {
+    const error = {
+      statusCode: 400,
+      message: joiError.message,
+    };
+    throw error;
+  }
 };
 
 module.exports = validationName;
