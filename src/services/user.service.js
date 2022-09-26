@@ -48,12 +48,7 @@ const getUserById = async (id) => {
   return user;
 };
 
-const removeUser = async ({ id }) => {
-  const isRemoved = await User.destroy({ where: { id } });
-
-  if (isRemoved) return { type: null, message: '' };
-  return { type: 500, message: 'Algo deu errado!' };
-};
+const removeUser = async ({ id }) => User.destroy({ where: { id } });
 
 module.exports = {
   registerUser,

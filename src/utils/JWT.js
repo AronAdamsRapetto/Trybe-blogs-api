@@ -19,9 +19,13 @@ const generateToken = ({ id, displayName, image }) => {
 const verifyToken = (token) => {
   try {
     const payload = jwt.verify(token, secret);
-    return { type: null, message: payload };    
-  } catch (error) {
-    return { type: 401, message: 'Expired or invalid token' };
+    return payload;  
+  } catch (err) {
+    const error = {
+      statusCode: 401,
+      message: 'Expired or invalid token',
+    };
+    throw error;
   }
 };
 

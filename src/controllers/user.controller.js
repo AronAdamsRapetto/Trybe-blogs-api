@@ -22,9 +22,7 @@ const getUserById = async (req, res) => {
 const removeUser = async (req, res) => {
   const { user } = req;
 
-  const { type, message } = await userService.removeUser(user);
-
-  if (type) return res.status(type).json({ message });
+  await userService.removeUser(user);
   return res.status(204).json();
 };
 
