@@ -3,9 +3,7 @@ const { validateUser } = require('./validations/validationUser');
 const { generateToken } = require('../utils/JWT');
 
 const registerUser = async (userInfo) => {
-  const validation = validateUser(userInfo);
-
-  if (validation.type) return validation;
+  validateUser(userInfo);
 
   const isAlreadyUserExist = await User.findOne({
     where: {
@@ -13,11 +11,16 @@ const registerUser = async (userInfo) => {
     },
   });
 
-  if (isAlreadyUserExist) return { type: 409, message: 'User already registered' };  
+  if (isAlreadyUserExist) {
+    const error = {
+      statusCode: 409,
+      message: 'User already registered',
+    };
+    throw error;
+  }
+  
   const { dataValues: newUser } = await User.create(userInfo);
-
-  const token = generateToken(newUser);
-  return { type: null, message: token };
+  return generateToken(newUser);
 };
 
 const getAllUsers = async () => User.findAll({
