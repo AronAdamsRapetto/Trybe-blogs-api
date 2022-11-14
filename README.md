@@ -1,4 +1,4 @@
-# Projeto - Blogs API - EM CONSTRUÇÃO
+# Projeto - Blogs API
 ---
 ## O que foi desenvolvido:
 
